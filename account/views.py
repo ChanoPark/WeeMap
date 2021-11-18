@@ -8,10 +8,11 @@ from django.forms.models import model_to_dict
 from account.serializer import UserShortcutSerializer
 import re
 import json
+from django.contrib import auth
 
 def user_validation(data):
     user_id_check = User.objects.filter(user_id=data['user_id'])
-    email_check1 = re.comile(
+    email_check1 = re.compile(
         r'[0-9a-zA-Z]+@[0-9a-zA-Z]+\.[0-9a-zA-Z]{2,}'
     ).search(data['email'])
     email_check2 = User.objects.filter(email=data['email']) #중복 체크
@@ -25,10 +26,10 @@ def user_validation(data):
     else:
         return "OK"
     
-@api_view(['post'])
+@api_view(['POST'])
 def register(request):
     data = json.loads(request.body)
-    required_fields = ('user_id', 'password','user_name', 'department', 'eamil')
+    required_fields = ('user_id', 'password','user_name', 'department', 'email')
 
     if not all(i in data for i in required_fields):
         return Response(
@@ -70,3 +71,11 @@ def info(request):
     if (request.method == "GET"):
         result = UserShortcutSerializer(user)
         return Response(result.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def logout(request):
+    auth.logout(request)
+    return Response(
+        {"message":"로그아웃이 완료되었습니다."},
+        status=status.HTTP_200_OK
+    )

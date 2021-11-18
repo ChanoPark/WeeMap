@@ -10,4 +10,5 @@ urlpatterns = [
     path('auth/refresh', refresh_jwt_token),
     path('account/', include('account.urls')),
     path('tab/', include('tab.urls')),
+    path('map/', include('map.urls')),
 ]

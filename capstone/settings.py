@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     ##created apps
     'account',
     'tab',
+    'map',
 ]
 
 MIDDLEWARE = [
@@ -154,3 +155,7 @@ AUTH_USER_MODEL = 'account.User'
 AUTHENTICATION_BACKENDS = (
     ('django.contrib.auth.backends.ModelBackend'),
 )
+
+MEDIA_URL = '/media/' #미디어 파일에 대한 URL 고정값 설정(필드명.url)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #db에 문자열로 저장됌->파일 저장될 루트경로
+#결국 BASE_DIR/media 에 저장됌, upload_to 옵션을 통해 디렉토리 분류
