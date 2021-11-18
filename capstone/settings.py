@@ -28,9 +28,11 @@ SECRET_KEY = my_settings.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
-
+#####서버로 넘길 때만 활성화!!!!!!!!!!!!!!###############
+ALLOWED_HOSTS = ['13.125.162.221']
+#ALLOWED_HOSTS = []
+#############################################################
 # Application definition
 
 INSTALLED_APPS = [
