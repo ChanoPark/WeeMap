@@ -1,19 +1,6 @@
 from django.db import models
 
 class Map(models.Model): #메인 지도 렌더링을 위한 기본 건물 정보
-    def create_map(self, latitude, longitude, building_name): #start_date, end_date, booth_host, booth_explain
-        booth = self.objects.create(
-            latitude = latitude,
-            longitude = longitude,
-            building_name = building_name,
-            is_building = False,
-        )
-        return booth
-
-    #id = models.AutoField(
-    #    verbose_name = 'id',
-    #    primary_key=True
-    #)
     latitude = models.DecimalField( #위도
         verbose_name = 'latitude',
         max_digits= 30,

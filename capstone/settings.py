@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     ##For DRF
     'rest_framework',
     'rest_framework_jwt',
+    'django_crontab', #부스 자동 삭제를 위한 자동화 모듈
     ##created apps
     'account',
     'tab',
@@ -117,7 +118,7 @@ TIME_ZONE = 'Asia/Seoul'
 
 #USE_L10N = True
 
-USE_TZ = False
+USE_TZ = False #USE_TZ = TRUE : 템플릿,form에만 적용 / False: 모든 경우에 저장 가능
 
 
 # Static files (CSS, JavaScript, Images)
@@ -161,3 +162,8 @@ AUTHENTICATION_BACKENDS = (
 MEDIA_URL = '/media/' #미디어 파일에 대한 URL 고정값 설정(필드명.url)
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #db에 문자열로 저장됌->파일 저장될 루트경로
 #결국 BASE_DIR/media 에 저장됌, upload_to 옵션을 통해 디렉토리 분류
+
+CRONJOBS = [
+    ('*0***', 'map.views.auto_delete_booth', '>> deleteBooth.log'),
+    ('*/1****', 'map.views.example','>> example.log'),
+]

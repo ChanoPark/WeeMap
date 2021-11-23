@@ -1,4 +1,4 @@
-"""    #로컬에서 사용할 때!!
+"""#로컬에서 사용할 때!!
 DATABASES = {
     'default' : {
         'ENGINE' : 'django.db.backends.mysql',
@@ -9,7 +9,7 @@ DATABASES = {
         'PORT' : '3306',
     }
 }
-"""
+"""   #AWS 배포용
 DATABASES = {
     'default' : {
         'ENGINE' : 'django.db.backends.mysql',
