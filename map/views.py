@@ -3,20 +3,21 @@ from django.forms.models import model_to_dict
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Map, Booth
-from map.serializers import MapSerializer
+from .models import Map, Booth, BuildingInfo
+from map.serializers import MapSerializer, ImageSerializer
 import json
 import re
 from operator import itemgetter
 from django.utils import timezone
 
+from django.views.decorators.csrf import csrf_exempt
 
 @api_view(['POST'])
 def rendering_map(request):
     building = Map.objects.all().values()
-    serializers = MapSerializer(building)
-
-    return Response(serializers.data, status=status.HTTP_200_OK)
+    #serializers = MapSerializer(building)
+    return Response(building, status=status.HTTP_200_OK)
+    #return Response(serializers.data, status=status.HTTP_200_OK)
 
 def map_validation(data):
     map_position_check = Map.objects.filter(latitude=data['latitude'], longitude=data['longitude'])
@@ -80,7 +81,7 @@ api_view(['POST'])
 def delete_booth(request):
     data = json.loads(request.body)
     required_fields = ('building_name')
-    if (not required_fields in required_fields):
+    if (not i in data for i in required_fields):
         return Response(
             {"message" : "부스를 삭제하려면 부스 이름이 입력되어야 합니다."},
             status=status.HTTP_400_BAD_REQUEST
@@ -97,6 +98,21 @@ def delete_booth(request):
             {"message":"일치하는 부스가 없습니다."},
             status=status.HTTP_400_BAD_REQUEST
         )
+
+@api_view(['POST'])
+@csrf_exempt
+def marker_info(request):
+    data = json.loads(request.body)
+    
+    if ('id' in data):
+        info = BuildingInfo.objects.filter(building_id=data['id']).values()
+        return Response(info, status=status.HTTP_200_OK)
+    elif ('map_id' in data):
+        info = Booth.objects.filter(map_id=data['map_id']).values()
+        return Response(info, status=status.HTTP_200_OK)
+    else:
+        return Response({"Message":"해당 정보의 ID값이 없거나 올바르지 않습니다."},
+        status=status.HTTP_400_BAD_REQUEST)
 
 def auto_delete_booth():
     booth = Booth.objects.all().values('end_date', 'map_id')
@@ -122,6 +138,3 @@ def auto_delete_booth():
             print(finished_booth)
             finished_booth.delete()
     print(timezone.now, "해당 날짜가 지난 부스가 삭제되었습니다.")
-
-def example():
-    print(timezone.now() ,"Crontab 동작 중")

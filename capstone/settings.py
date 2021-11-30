@@ -9,10 +9,9 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 from django.utils import timezone
-import os
 import my_settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -164,6 +163,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #db에 문자열로 저장됌->파�
 #결국 BASE_DIR/media 에 저장됌, upload_to 옵션을 통해 디렉토리 분류
 
 CRONJOBS = [
-    ('*0***', 'map.views.auto_delete_booth', '>> deleteBooth.log'),
-    ('*/1****', 'map.views.example','>> example.log'),
+    ('* 0 * * *', 'map.views.auto_delete_booth', '>> capstone.deleteBooth.log'),
 ]
