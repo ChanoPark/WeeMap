@@ -3,14 +3,14 @@ from django.forms.models import model_to_dict
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Map, Booth, BuildingInfo
+from .models import Map, Booth, BuildingInfo, UserLocation
 from map.serializers import MapSerializer, ImageSerializer
 import json
 import re
 from operator import itemgetter
 from django.utils import timezone
-
 from django.views.decorators.csrf import csrf_exempt
+from haversine import haversine
 
 @api_view(['POST'])
 def rendering_map(request):
@@ -104,11 +104,11 @@ def delete_booth(request):
 def marker_info(request):
     data = json.loads(request.body)
     
-    if ('id' in data):
+    if (data['is_building']==1 and 'id' in data):
         info = BuildingInfo.objects.filter(building_id=data['id']).values()
         return Response(info, status=status.HTTP_200_OK)
-    elif ('map_id' in data):
-        info = Booth.objects.filter(map_id=data['map_id']).values()
+    elif (data['is_building']==0 and 'id' in data):
+        info = Booth.objects.filter(map_id=data['id']).values()
         return Response(info, status=status.HTTP_200_OK)
     else:
         return Response({"Message":"해당 정보의 ID값이 없거나 올바르지 않습니다."},
@@ -138,3 +138,34 @@ def auto_delete_booth():
             print(finished_booth)
             finished_booth.delete()
     print(timezone.now, "해당 날짜가 지난 부스가 삭제되었습니다.")
+
+@api_view(['POST'])
+def cal_hotplace(request):
+    latitude = UserLocation.objects.all().values('user_latitude')
+    longitude = UserLocation.objects.all().values('user_longitude')
+    
+    result = [0]*len(latitude)
+    lati = []
+    longi = []
+    idx = 0
+
+    for i, j in zip(latitude, longitude):
+        lati.append(i['user_latitude'])
+        longi.append(j['user_longitude'])
+        
+    for t, g in zip(lati, longi):
+        idx2 = 0
+        a = (t, g)
+        for t2, g2 in zip(lati, longi):
+            b = (t2, g2)
+            if (haversine(a, b) < 0.01): #거리가 10m 미만
+                result[idx] += 1
+            idx2+=1
+        idx+=1
+    
+    max_idx = result.index(max(result))
+
+    Map.objects.filter(is_building=2).update(latitude=lati[max_idx])
+    Map.objects.filter(is_building=2).update(longitude=longi[max_idx])
+    
+    return Response(status.HTTP_200_OK)

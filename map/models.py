@@ -5,21 +5,19 @@ class Map(models.Model): #메인 지도 렌더링을 위한 기본 건물 정보
         verbose_name = 'latitude',
         max_digits= 30,
         decimal_places = 6,
-        unique = False
     )
     longitude = models.DecimalField( #경도
         verbose_name = 'longitude',
         max_digits= 30,
         decimal_places = 6,
-        unique = False
     )
     building_name = models.CharField(
         verbose_name = 'building_name',
         max_length = 30
     )
-    is_building = models.BooleanField( #True=건물, False=부스
+    is_building = models.IntegerField( #0=부스, 1=건물, 2=핫플
         verbose_name = 'is_building',
-        default = True
+        default=0
     )
     building_image = models.ImageField( #파일 다루기 위해 pillow 설치
         verbose_name = 'building_image',
@@ -102,4 +100,18 @@ class Booth(models.Model): #행사 부스 설치를 위한 정보 관리
     booth_explain = models.TextField(
         verbose_name = 'booth_explain',
         max_length = 150
+    )
+
+class UserLocation(models.Model):
+    user_latitude = models.DecimalField( #위도
+        verbose_name = 'latitude',
+        max_digits= 30,
+        decimal_places = 6,
+        unique = False
+    )
+    user_longitude = models.DecimalField( #경도
+        verbose_name = 'longitude',
+        max_digits= 30,
+        decimal_places = 6,
+        unique = False
     )
