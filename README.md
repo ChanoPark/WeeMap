@@ -27,5 +27,5 @@
 <img src = "https://user-images.githubusercontent.com/77626299/178098961-2964886e-e6be-4abd-baa1-df84c86cc20e.png" width="60%" height="60%"> 
 
 ## 프로젝트 팀 구성
-BE: 박찬호: <a href="https://github.com/ChanoPark">Github</a>  
-FE: 김대희: <a href="https://github.com/eet43">Github</a>
+BE: 박찬호 - <a href="https://github.com/ChanoPark">Github</a>  
+FE: 김대희 - <a href="https://github.com/eet43">Github</a>
